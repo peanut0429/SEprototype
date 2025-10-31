@@ -1,0 +1,25 @@
+<section data-page="notifications" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">提醒与通知</div>
+      <div class="row" style="align-items:center">
+        <label class="col text-subtle" for="dailyTime">每日提醒时间</label>
+        <input id="dailyTime" type="time" value="19:30" style="height:36px;border-radius:8px;border:1px solid var(--c-border);padding:0 8px"/>
+        <label class="text-subtle" style="margin-left:auto"><input type="checkbox" checked/> 启用</label>
+      </div>
+      <div class="row" style="margin-top:8px;align-items:center">
+        <label class="col text-subtle" for="limit">每题限时（秒）</label>
+        <input id="limit" type="number" value="20" min="5" max="120" style="height:36px;border-radius:8px;border:1px solid var(--c-border);padding:0 8px"/>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">系统通知</div>
+      <label class="text-subtle"><input type="checkbox" checked/> 成绩推送</label>
+      <label class="text-subtle"><input type="checkbox"/> 家长提醒</label>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无设置</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，部分通知不可用</div></div></div>
+</section>

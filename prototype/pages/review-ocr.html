@@ -1,0 +1,17 @@
+<section data-page="review-ocr" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">拍照上传（占位）</div>
+      <input id="ocr-upload" type="file" accept="image/*" multiple style="width:100%"/>
+      <div class="notice" id="ocr-progress" style="margin-top:8px">等待上传</div>
+    </div>
+    <div class="card">
+      <div class="section-title">识别结果（占位）</div>
+      <div class="notice">置信度提示、手动校对与同步到结果/错题本</div>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无记录</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，暂不支持识别</div></div></div>
+</section>

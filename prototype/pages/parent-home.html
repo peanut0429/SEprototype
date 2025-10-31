@@ -1,0 +1,38 @@
+<section data-page="parent-home" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">今日任务</div>
+      <ul id="kids-list" aria-live="polite"></ul>
+    </div>
+    <div class="card">
+      <div class="section-title">本周进度</div>
+      <div class="text-subtle">目标：每日30题 · 7天</div>
+      <div class="progress-track" style="margin-top:8px"><div class="progress-fill" id="weekly-progress-fill" style="width:0%"></div></div>
+      <div class="text-subtle" style="margin-top:6px">已完成 <span id="weekly-progress-percent">0</span>%</div>
+    </div>
+    <div class="card">
+      <div class="section-title">最近活动</div>
+      <ul id="recent-activity"></ul>
+    </div>
+    <div class="card">
+      <div class="notice">温馨提示：固定时间练习、效果更好（占位）</div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <a class="btn btn-primary col" href="#/generator">一键出题</a>
+        <a class="btn btn-plain col" href="#/print-center">打印</a>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <a class="btn btn-plain col" href="#/mistakes">错题本</a>
+        <a class="btn btn-plain col" href="#/reports">报告</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="text-subtle">昨日完成情况：良好 · 正确率 86%</div>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无孩子</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>

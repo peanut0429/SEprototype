@@ -1,0 +1,67 @@
+{
+  "children": [
+    {"id":"c_001","name":"小明","grade":"一年级上","textbook":"人教版","goals":{"dailyCount":30,"timeLimitSec":600}},
+    {"id":"c_002","name":"小红","grade":"二年级下","textbook":"苏教版","goals":{"dailyCount":30,"timeLimitSec":600}}
+  ],
+  "questionBank": [
+    {"id":"q1","stem":"3 + 4 =","answer":7, "tags":["grade1","add","range20","warm"]},
+    {"id":"q2","stem":"9 - 5 =","answer":4, "tags":["grade1","sub","range20"]},
+    {"id":"q3","stem":"8 + 7 =","answer":15, "tags":["grade1","add","range20","weak"]},
+    {"id":"q4","stem":"12 - 9 =","answer":3, "tags":["grade1","sub","range20"]},
+    {"id":"q5","stem":"6 + 9 =","answer":15, "tags":["grade1","add","range20"]},
+    {"id":"q6","stem":"14 - 8 =","answer":6, "tags":["grade1","sub","range20","weak"]},
+    {"id":"q7","stem":"7 × 6 =","answer":42, "tags":["grade2","mul","table","weak"]},
+    {"id":"q8","stem":"8 × 3 =","answer":24, "tags":["grade2","mul","table"]},
+    {"id":"q9","stem":"16 ÷ 4 =","answer":4, "tags":["grade2","div","table"]},
+    {"id":"q10","stem":"7 × 9 =","answer":63, "tags":["grade2","mul","table","weak"]},
+    {"id":"q11","stem":"25 + 37 =","answer":62, "tags":["grade2","add","range100"]},
+    {"id":"q12","stem":"90 - 27 =","answer":63, "tags":["grade2","sub","range100"]},
+    {"id":"q13","stem":"3 × 12 =","answer":36, "tags":["grade3","mul","range100"]},
+    {"id":"q14","stem":"84 ÷ 7 =","answer":12, "tags":["grade3","div","range100"]},
+    {"id":"q15","stem":"125 - 78 =","answer":47, "tags":["grade3","sub","range200"]},
+    {"id":"q16","stem":"36 + 45 =","answer":81, "tags":["grade3","add","range100","weak"]},
+    {"id":"q17","stem":"7 + 8 =","answer":15, "tags":["grade1","add","range20","warm"]},
+    {"id":"q18","stem":"20 - 9 =","answer":11, "tags":["grade1","sub","range20"]},
+    {"id":"q19","stem":"9 × 5 =","answer":45, "tags":["grade2","mul","table"]},
+    {"id":"q20","stem":"56 ÷ 8 =","answer":7, "tags":["grade2","div","table","weak"]},
+    {"id":"q21","stem":"300 - 125 =","answer":175, "tags":["grade3","sub","range500"]},
+    {"id":"q22","stem":"12 + 14 =","answer":26, "tags":["grade1","add","range20"]},
+    {"id":"q23","stem":"15 - 7 =","answer":8, "tags":["grade1","sub","range20","warm"]},
+    {"id":"q24","stem":"6 × 7 =","answer":42, "tags":["grade2","mul","table"]},
+    {"id":"q25","stem":"63 ÷ 9 =","answer":7, "tags":["grade2","div","table"]},
+    {"id":"q26","stem":"27 + 35 =","answer":62, "tags":["grade2","add","range100"]},
+    {"id":"q27","stem":"45 + 28 =","answer":73, "tags":["grade3","add","range100"]},
+    {"id":"q28","stem":"140 - 68 =","answer":72, "tags":["grade3","sub","range200"]},
+    {"id":"q29","stem":"9 + 9 =","answer":18, "tags":["grade1","add","range20"]},
+    {"id":"q30","stem":"18 - 9 =","answer":9, "tags":["grade1","sub","range20"]},
+    {"id":"q31","stem":"7 × 8 =","answer":56, "tags":["grade2","mul","table"]},
+    {"id":"q32","stem":"72 ÷ 8 =","answer":9, "tags":["grade2","div","table"]},
+    {"id":"q33","stem":"88 - 49 =","answer":39, "tags":["grade3","sub","range100"]},
+    {"id":"q34","stem":"19 + 27 =","answer":46, "tags":["grade3","add","range100"]},
+    {"id":"q35","stem":"5 × 9 =","answer":45, "tags":["grade2","mul","table","warm"]},
+    {"id":"q36","stem":"63 ÷ 7 =","answer":9, "tags":["grade2","div","table","warm"]},
+    {"id":"q37","stem":"200 - 75 =","answer":125, "tags":["grade3","sub","range200"]},
+    {"id":"q38","stem":"24 + 19 =","answer":43, "tags":["grade3","add","range100"]},
+    {"id":"q39","stem":"6 × 6 =","answer":36, "tags":["grade2","mul","table"]},
+    {"id":"q40","stem":"81 ÷ 9 =","answer":9, "tags":["grade2","div","table"]}
+  ],
+  "dailySets": [
+    {"id":"set_20251030_c001","childId":"c_001","date":"2025-10-30","questionIds":["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30"],"strategy":"default"}
+  ],
+  "results": [
+    {"setId":"set_20251030_c001","childId":"c_001","correctCount":24,"total":30,"durationSec":780,"mistakes":["q3","q6","q10","q20","q21","q28"],"timestamp":1730246400000}
+  ],
+  "mistakes": [
+    {"childId":"c_001","questionId":"q3","lastSeen":1730246400000,"count":2},
+    {"childId":"c_001","questionId":"q6","lastSeen":1730246400000,"count":1},
+    {"childId":"c_001","questionId":"q10","lastSeen":1730246400000,"count":1}
+  ],
+  "rewards": [
+    {"id":"r1","name":"连击达人","earned":true},
+    {"id":"r2","name":"坚持之星","earned":false}
+  ],
+  "notifications": [
+    {"id":"n1","type":"daily","time":"19:30","enabled":true},
+    {"id":"n2","type":"weekly","day":"Sun","enabled":false}
+  ]
+}

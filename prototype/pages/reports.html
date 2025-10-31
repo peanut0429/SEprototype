@@ -1,0 +1,18 @@
+<section data-page="reports" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">报告中心</div>
+      <div class="row">
+        <button class="filter-chip active">日报</button>
+        <button class="filter-chip">周报</button>
+        <button class="filter-chip">月报</button>
+      </div>
+    </div>
+    <div id="report-box"></div>
+    <div class="card"><div class="notice">导出/分享（占位）</div></div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无报告</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>

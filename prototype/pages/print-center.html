@@ -1,0 +1,44 @@
+<section data-page="print-center" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">A4 打印预览</div>
+      <div class="row">
+        <label>栏数
+          <select id="print-cols" style="height:36px;border-radius:8px;border:1px solid var(--c-border);margin-left:8px">
+            <option value="2">两栏</option>
+            <option value="3">三栏</option>
+          </select>
+        </label>
+        <label style="margin-left:12px"><input type="checkbox" id="print-ans"> 显示答案</label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn btn-plain">生成 PDF（占位）</button>
+        <button class="btn btn-primary" onclick="window.print()">直接打印</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <a class="btn btn-plain" href="#/review-ocr">去批改（拍照上传占位）</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="preview-grid" style="--cols:2">
+        <div id="print-list" class="col" style="grid-column:1/-1"></div>
+      </div>
+      <div class="text-subtle" style="margin-top:8px">页眉（姓名/日期）与页边距仅在打印时显示</div>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无生成内容</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，仍可打印</div></div></div>
+  <style>
+    @media print{
+      @page{ margin: 12mm }
+      body{ background:#fff }
+      .preview-grid{ --cols: 2 }
+      #print-list{ display:grid; grid-template-columns:repeat(var(--cols), 1fr); gap:8px }
+      #print-list .preview-item{ font-size:14pt; line-height:1.6; padding:6px 8px }
+      /* 页眉 */
+      body:before{ content: "姓名：__________   日期：__________"; display:block; margin-bottom:8px; font-size:12pt; color:#555 }
+    }
+  </style>
+</section>

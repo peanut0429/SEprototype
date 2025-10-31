@@ -1,0 +1,31 @@
+<section data-page="onboarding" data-state="ready">
+  <div data-view="ready">
+    
+    <div class="card">
+      <div class="section-title">登录 / 注册</div>
+      <div class="row">
+        <a class="btn btn-plain col" href="#/auth-register">注册</a>
+        <a class="btn btn-plain col" href="#/auth-login">登录</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">快速入口</div>
+      <div class="row">
+        <a class="btn btn-plain col" href="#/generator">一键出题</a>
+        <a class="btn btn-plain col" href="#/print-center">打印中心</a>
+      </div>
+    </div>
+  </div>
+  <div data-view="loading">
+    <div class="skeleton skeleton-page" aria-hidden="true"></div>
+  </div>
+  <div data-view="empty">
+    <div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无内容</div></div></div>
+  </div>
+  <div data-view="error">
+    <div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div>
+  </div>
+  <div data-view="offline">
+    <div class="card"><div class="notice">离线状态，功能受限</div></div>
+  </div>
+</section>

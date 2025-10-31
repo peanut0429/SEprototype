@@ -1,0 +1,27 @@
+<section data-page="calendar" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">打卡日历</div>
+      <div class="calendar" id="calendar">
+        <div class="cal-header">
+          <button class="icon-btn" id="cal-prev" aria-label="上一月">◀</button>
+          <div class="cal-title" id="cal-title">2025 年 10 月</div>
+          <button class="icon-btn" id="cal-next" aria-label="下一月">▶</button>
+        </div>
+        <div class="cal-week">
+          <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn btn-primary col" id="btn-checkin-page" type="button">今日打卡</button>
+        <a class="btn btn-plain col" href="#/child-home">返回首页</a>
+      </div>
+      <div class="text-subtle" style="margin-top:8px">说明：完成一次练习视为打卡；也可手动“今日打卡”。</div>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无数据</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>

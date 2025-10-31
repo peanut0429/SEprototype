@@ -1,0 +1,25 @@
+<section data-page="auth-login" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">账号登录</div>
+      <form id="login-form" aria-label="登录">
+        <div class="row">
+          <div class="col"><input id="login-identifier" autocomplete="username" placeholder="手机号或邮箱" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" /></div>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <div class="col"><input id="login-password" type="password" autocomplete="current-password" placeholder="密码" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" /></div>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn btn-primary col" type="submit">登录</button>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <a class="text-subtle" href="#/auth-register">没有账号？去注册</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" class="empty-icon"/><div>暂无内容</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>

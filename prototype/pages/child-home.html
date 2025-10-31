@@ -1,0 +1,38 @@
+<section data-page="child-home" data-state="ready">
+  <div data-view="ready">
+    <div id="child-info"></div>
+    <div class="card">
+      <div class="section-title">快捷入口</div>
+      <div class="row">
+        <a class="btn btn-accent col" href="#/practice">开始练习</a>
+        <a class="btn btn-plain col" href="#/rewards">奖励中心</a>
+        <a class="btn btn-plain col" href="#/study-settings">题库设置</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">打卡日历</div>
+      <div id="mini-cal" class="calendar mini"></div>
+      <div class="row" style="margin-top:8px">
+        <a class="btn btn-primary col" href="#/calendar">查看完整日历</a>
+        <button class="btn btn-plain col" id="btn-checkin-today" type="button">今日打卡</button>
+      </div>
+      <div class="row" style="margin-top:8px; align-items:center">
+        <div class="stats-card"><div class="stats-value" id="streak-count">0</div><div class="stats-sub">连续天数</div></div>
+        <div class="stats-card"><div class="stats-value" id="week-done">0/7</div><div class="stats-sub">本周完成天数</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">今日奖励预告</div>
+      <div class="row">
+        <div class="stats-card"><div class="stats-value">⭐</div><div class="stats-sub">完成即得</div></div>
+        <div class="stats-card"><div class="stats-value">🎁</div><div class="stats-sub">正确率≥90%</div></div>
+        <div class="stats-card"><div class="stats-value">⏱️</div><div class="stats-sub">15分钟内完成</div></div>
+      </div>
+    </div>
+    <div class="card"><div class="notice">小贴士：先做乘法口诀，再做混合运算（占位）</div></div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无任务</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>

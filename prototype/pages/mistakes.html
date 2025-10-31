@@ -1,0 +1,22 @@
+<section data-page="mistakes" data-state="ready">
+  <div data-view="ready">
+    <div class="card">
+      <div class="section-title">筛选</div>
+      <div class="filter-bar">
+        <div class="filter-chip active">按知识点</div>
+        <div class="filter-chip">按日期</div>
+        <div class="filter-chip">按难度</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn btn-primary btn-block" id="btn-mistakes30">一键生成 错题巩固 30 题</button>
+      </div>
+      <ul id="mistakes-list" aria-live="polite"></ul>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无错题</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>
