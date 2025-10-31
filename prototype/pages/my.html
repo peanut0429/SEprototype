@@ -1,105 +1,27 @@
 <section data-page="my" data-state="ready">
   <div data-view="ready">
-    <div id="my-box">
-      <form id="my-form">
-        <div class="card">
-          <div class="section-title">我的信息</div>
-          <div class="row">
-            <div class="col">
-              <div class="text-subtle">登录名</div>
-              <div id="acc-identifier" class="text-strong">未登录</div>
-            </div>
-            <div class="col">
-              <div class="text-subtle">角色</div>
-              <div id="acc-role" class="text-strong">-</div>
-            </div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <div class="col">
-              <label class="text-subtle" for="acc-newpwd">修改密码（原型）</label>
-              <input id="acc-newpwd" type="password" placeholder="新密码" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-            </div>
-            <div class="col">
-              <label class="text-subtle" for="acc-newpwd2">确认新密码</label>
-              <input id="acc-newpwd2" type="password" placeholder="再次输入" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-            </div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <button type="button" class="btn btn-plain col" id="btn-change-pwd">更新密码</button>
-            <button type="button" class="btn btn-danger col" id="btn-logout">退出登录</button>
-          </div>
+    <div class="card">
+      <div class="row" style="align-items:center;gap:12px">
+        <img id="my-avatar" src="assets/icons/user.svg" alt="头像" style="width:56px;height:56px;border-radius:50%;border:1px solid var(--c-border);object-fit:cover" />
+        <div class="col">
+          <div id="my-nickname" class="text-strong">未登录</div>
+          <div class="text-subtle" id="my-role">学生模式</div>
         </div>
-        <div class="card">
-          <div class="section-title">基本信息</div>
-          <!-- 学生模式：编辑当前孩子；家长模式：编辑家长信息 -->
-          <div id="for-student">
-            <div class="row">
-              <div class="col">
-                <label class="text-subtle" for="field-name">姓名</label>
-                <input id="field-name" type="text" placeholder="输入姓名" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-              </div>
-              <div class="col">
-                <label class="text-subtle" for="field-grade">年级</label>
-                <input id="field-grade" type="text" placeholder="如 三年级" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-              </div>
-            </div>
-            <div class="row" style="margin-top:8px">
-              <div class="col">
-                <label class="text-subtle" for="field-goal">每日目标题数</label>
-                <input id="field-goal" type="number" min="10" max="200" step="10" placeholder="30" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-              </div>
-            </div>
-          </div>
-          <div id="for-parent">
-            <div class="row">
-              <div class="col">
-                <label class="text-subtle" for="field-p-name">家长姓名</label>
-                <input id="field-p-name" type="text" placeholder="输入姓名" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-              </div>
-              <div class="col">
-                <label class="text-subtle" for="field-p-phone">手机号</label>
-                <input id="field-p-phone" type="tel" placeholder="11位手机号" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-              </div>
-            </div>
-            <div class="row" style="margin-top:8px">
-              <div class="col">
-                <label class="text-subtle" for="field-p-email">邮箱</label>
-                <input id="field-p-email" type="email" placeholder="you@example.com" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="section-title">服务配置（后端对接）</div>
-          <div class="row">
-            <div class="col">
-              <label class="text-subtle" for="api-base">Base URL</label>
-              <input id="api-base" type="url" placeholder="https://api.example.com" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-            </div>
-            <div class="col">
-              <label class="text-subtle" for="api-token">Token（可选）</label>
-              <input id="api-token" type="text" placeholder="Bearer Token" style="width:100%;height:44px;border:1px solid var(--c-border);border-radius:10px;padding:0 12px" />
-            </div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <button type="button" class="btn btn-plain col" id="btn-sync-pull">从服务器拉取</button>
-            <button type="button" class="btn btn-plain col" id="btn-sync-push">提交到服务器</button>
-          </div>
-        </div>
-
-        <div class="row">
-          <button type="submit" class="btn btn-primary col">保存</button>
-        </div>
-      </form>
+        <a class="btn btn-plain" href="#/my-profile" style="flex:0 0 auto">编辑</a>
+      </div>
+    </div>
+    <div class="card">
+      <ul class="list" style="list-style:none;margin:0;padding:0">
+        <li><a href="#/my-account" class="row" style="align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--c-border)">账号管理<span>›</span></a></li>
+        <li><a href="#/settings" class="row" style="align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--c-border)">设置<span>›</span></a></li>
+        <li><a href="#/print-center" class="row" style="align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--c-border)">打印中心<span>›</span></a></li>
+        <li><a href="#/help" class="row" style="align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--c-border)">帮助<span>›</span></a></li>
+        <li><button id="btn-logout-hub" class="row" style="width:100%;align-items:center;justify-content:center;padding:12px 4px;background:var(--c-danger-bg);color:var(--c-danger);border-radius:10px;margin-top:8px">退出登录</button></li>
+      </ul>
     </div>
   </div>
   <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
   <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无数据</div></div></div></div>
   <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
   <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
-
-  <script>
-    // 页面逻辑由 app.js 的 initMy 负责
-  </script>
 </section>

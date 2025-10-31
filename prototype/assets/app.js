@@ -46,34 +46,81 @@
     'reports': { title: '报告中心', file: 'reports.html' },
     'print-center': { title: '打印中心', file: 'print-center.html' },
     'review-ocr': { title: '批改中心', file: 'review-ocr.html' },
-    'calendar': { title: '日历打卡', file: 'calendar.html' },
+  'calendar': 'footprint-checkin',
+  'footprint-checkin': { title: '足迹', file: 'footprint-checkin.html' },
+  'footprint-achievement': { title: '足迹', file: 'footprint-achievement.html' },
+  'footprint-reward': { title: '足迹', file: 'footprint-reward.html' },
   'study-settings': { title: '题库设置', file: 'study-settings.html' },
   'auth-register': { title: '注册', file: 'auth-register.html' },
   'auth-login': { title: '登录', file: 'auth-login.html' },
     'settings': { title: '设置', file: 'settings.html' },
     'notifications': { title: '通知', file: 'notifications.html' },
   'my': { title: '我的', file: 'my.html' },
+  'my-account': { title: '账号管理', file: 'my-account.html' },
+  'my-profile': { title: '头像与昵称', file: 'my-profile.html' },
     'rewards': { title: '奖励中心', file: 'rewards.html' },
     'help': { title: '帮助', file: 'help.html' },
   };
 
-  // 简单数据生成/加载
-  async function ensureData(){
-    if(State.data.children && State.data.children.length) return;
-    try{
-      const res = await fetch('assets/mock-data.json');
-      const data = await res.json();
-      Object.assign(State.data, data);
-      if(!Array.isArray(State.data.checkins)) State.data.checkins = [];
-      if(!State.session.currentChildId && data.children[0]){
-        State.session.currentChildId = data.children[0].id;
-      }
-      save();
-    }catch(e){ console.error(e); }
+  // 需要家长童锁的路由
+  const PARENT_ROUTES = new Set(['parent-home','review-ocr','print-center']);
+
+  // 错误视图占位
+  function errorView(title, tip){
+    return `<div class="card"><div class="section-title">${title||'出错了'}</div><div class="text-subtle">${tip||'请稍后重试。'}</div></div>`;
   }
 
-  const PARENT_ROUTES = new Set(['parent-home','generator','profile-child','reports','print-center','review-ocr','settings','notifications']);
+  // 简单数据生成/加载
+  async function ensureData(){
+    // 题库种子
+    if(!Array.isArray(State.data.questionBank) || State.data.questionBank.length===0){
+      const bank = [];
+      for(let i=1;i<=120;i++){
+        let a = Math.floor(Math.random()*9)+1;
+        let b = Math.floor(Math.random()*9)+1;
+        const op = i%3===0 ? '-' : '+';
+        if(op==='-' && a<b){ const t=a; a=b; b=t; }
+        const answer = op==='+' ? (a+b) : (a-b);
+        const tags = [];
+        if(i%4===0) tags.push('weak');
+        if(i%5===0) tags.push('warm');
+        bank.push({ id: 'q'+i, stem: `${a} ${op} ${b} =`, answer, tags });
+      }
+      State.data.questionBank = bank;
+    }
+  }
 
+  function bindCommonActions(routeKey){
+    // 顶部返回
+    const backBtn = document.querySelector('[data-nav="back"]');
+    if(backBtn) backBtn.onclick = ()=> history.back();
+
+    // 全局离线监听
+    const updateOnline = ()=>{
+      if(!navigator.onLine){
+        showToast('已离线，功能受限');
+        appEl.setAttribute('data-state','offline');
+      } else if(appEl.getAttribute('data-state')==='offline'){
+        appEl.setAttribute('data-state','ready');
+      }
+    };
+    window.removeEventListener('online', updateOnline); window.removeEventListener('offline', updateOnline);
+    window.addEventListener('online', updateOnline); window.addEventListener('offline', updateOnline);
+    updateOnline();
+
+    // 头部更多菜单
+    const moreBtn = document.querySelector('[data-nav="more"]');
+    const menu = document.getElementById('header-menu');
+    if(moreBtn && menu){
+      moreBtn.onclick = (e)=>{
+        e.stopPropagation();
+        buildHeaderMenu();
+        menu.hidden = !menu.hidden;
+      };
+      document.addEventListener('click', ()=>{ if(!menu.hidden){ menu.hidden = true; } }, { once: true });
+      menu.addEventListener('click', (ev)=> ev.stopPropagation());
+    }
+  }
   function parentLocked(){
     if(!State.data.parentLock?.enabled) return false;
     const now = Date.now();
@@ -150,67 +197,36 @@
     }
   }
 
-  function errorView(title,desc){
-    return `<div class="card"><div class="empty"><img class="empty-icon" src="assets/icons/error.svg" alt="错误图标"><div>${title}</div><div class="text-subtle">${desc}</div><button class="btn btn-primary" onclick="location.reload()">重试</button></div></div>`;
-  }
-
-  function renderTabbar(activeRoute){
-    // 登录/注册/引导页隐藏底部导航
-    if(['auth-login','auth-register','onboarding'].includes(activeRoute)){
-      tabbarEl.innerHTML = '';
+  // 底部 Tab 渲染与激活
+  function renderTabbar(routeKey){
+    if(!tabbarEl) return;
+    const hideOn = new Set(['auth-login','auth-register','onboarding']);
+    if(hideOn.has(routeKey)){
+      tabbarEl.hidden = true; tabbarEl.innerHTML = '';
       return;
     }
+    tabbarEl.hidden = false;
     const role = State.session.role || 'student';
-    /** 统一的底部导航：不直接展示“学生/家长”切换 **/
-    const items = role==='parent'
-      ? [
-          { route:'parent-home', label:'主页', icon:'home.svg' },
-          { route:'reports', label:'报告', icon:'report.svg' },
-          { route:'my', label:'我的', icon:'user.svg' },
-        ]
-      : [
-          { route:'child-home', label:'学习', icon:'practice.svg' },
-          { route:'calendar', label:'打卡', icon:'calendar.svg' },
-          { route:'rewards', label:'成就', icon:'trophy.svg' },
-          { route:'my', label:'我的', icon:'user.svg' },
-        ];
-    tabbarEl.innerHTML = items.map(i=>
-      `<a href="#/${i.route}" class="tab-item ${i.route===activeRoute?'active':''}" data-route="${i.route}" aria-label="${i.label}">
-         <img src="assets/icons/${i.icon}" alt="" class="tab-icon" />
-         <span>${i.label}</span>
-       </a>`
-    ).join('');
+    if(role === 'parent'){
+      const tabs = [
+        { key:'parent-home', label:'首页', href:'#/parent-home' },
+        { key:'reports', label:'报告', href:'#/reports' },
+        { key:'settings', label:'设置', href:'#/settings' },
+      ];
+      tabbarEl.innerHTML = tabs.map(t=>`<a class="tab-item ${routeKey===t.key?'active':''}" href="${t.href}" aria-current="${routeKey===t.key?'page':'false'}">${t.label}</a>`).join('');
+    } else {
+      const isFootprint = routeKey==='calendar' || routeKey.startsWith('footprint-');
+      const tabs = [
+        { key:'child-home', label:'学习', href:'#/child-home', active: routeKey==='child-home' },
+        { key:'footprint', label:'足迹', href:'#/footprint-checkin', active: isFootprint },
+        { key:'my', label:'我的', href:'#/my', active: routeKey==='my' },
+      ];
+      tabbarEl.innerHTML = tabs.map(t=>`<a class="tab-item ${t.active?'active':''}" href="${t.href}" aria-current="${t.active?'page':'false'}">${t.label}</a>`).join('');
+    }
   }
 
   function activateTab(routeKey){
-    // 重新渲染，确保“学生/家长不会同时出现”
     renderTabbar(routeKey);
-  }
-
-  function bindCommonActions(routeKey){
-    // 顶部返回
-    document.querySelector('[data-nav="back"]').onclick = ()=> history.back();
-
-    // 全局离线监听
-    const updateOnline = ()=>{ if(!navigator.onLine){ showToast('已离线，功能受限'); appEl.setAttribute('data-state','offline'); }else if(appEl.getAttribute('data-state')==='offline'){ appEl.setAttribute('data-state','ready'); }};
-    window.removeEventListener('online', updateOnline); window.removeEventListener('offline', updateOnline);
-    window.addEventListener('online', updateOnline); window.addEventListener('offline', updateOnline);
-    updateOnline();
-
-    // 头部更多菜单
-    const moreBtn = document.querySelector('[data-nav="more"]');
-    const menu = document.getElementById('header-menu');
-    if(moreBtn && menu){
-      moreBtn.onclick = (e)=>{
-        e.stopPropagation();
-        buildHeaderMenu();
-        menu.hidden = !menu.hidden;
-      };
-      document.addEventListener('click', (ev)=>{
-        if(!menu.hidden){ menu.hidden = true; }
-      }, { once: true });
-      menu.addEventListener('click', (ev)=> ev.stopPropagation());
-    }
   }
 
   function buildHeaderMenu(){
@@ -250,7 +266,9 @@
       case 'mistakes': initMistakes(); break;
       case 'print-center': initPrintCenter(); break;
       case 'review-ocr': initReviewOCR(); break;
-      case 'calendar': initCalendar(); break;
+      case 'footprint-checkin': initFootprintCheckin(); break;
+      case 'footprint-achievement': initFootprintAchievement(); break;
+      case 'footprint-reward': initFootprintReward(); break;
   case 'study-settings': initStudySettings(); break;
   case 'auth-register': initAuthRegister(); break;
   case 'auth-login': initAuthLogin(); break;
@@ -258,6 +276,8 @@
       case 'notifications': initNotifications(); break;
       case 'rewards': initRewards(); break;
   case 'my': initMy(); break;
+  case 'my-account': initMyAccount(); break;
+  case 'my-profile': initMyProfile(); break;
       case 'reports': initReports(); break;
       case 'profile-child': initProfile(); break;
       case 'help': default: break;
@@ -546,7 +566,8 @@
       State.data.account = { id: 'acc_'+Date.now(), role: 'student', identifier, password: pwd };
       State.session.role = 'student'; save(); updateRoleIndicator();
       showToast('注册成功');
-      location.hash = '#/child-home';
+      const hasChild = Array.isArray(State.data.children) && State.data.children.length>0;
+      location.hash = hasChild ? '#/child-home' : '#/onboarding';
     });
   }
 
@@ -561,14 +582,36 @@
         State.session.role = acc.role==='guest' ? 'student' : acc.role || 'student';
         save(); updateRoleIndicator();
         showToast('登录成功');
-        location.hash = State.session.role==='parent' ? '#/parent-home' : '#/child-home';
+        if(State.session.role==='parent'){
+          location.hash = '#/parent-home';
+        }else{
+          const hasChild = Array.isArray(State.data.children) && State.data.children.length>0;
+          location.hash = hasChild ? '#/child-home' : '#/onboarding';
+        }
       } else {
         showToast('账号或密码不正确（原型）');
       }
     });
+    // 游客一键进入：设置为学生模式并跳转
+    document.getElementById('btn-guest')?.addEventListener('click', ()=>{
+      State.session.role = 'student';
+      // 若无孩子，尽量沿用示例数据；若仍无则创建一个占位孩子
+      if(!getCurrentChild()){
+        if(!State.data.children || State.data.children.length===0){
+          const id = 'c_'+Math.random().toString(36).slice(2,8);
+          State.data.children = [{ id, name:'小朋友', grade:'三年级', textbook:'人教版', goals:{ dailyCount:30, timeLimitSec:600 } }];
+          State.session.currentChildId = id;
+        } else {
+          State.session.currentChildId = State.data.children[0].id;
+        }
+      }
+      save(); updateRoleIndicator();
+      showToast('已以游客身份进入');
+      location.hash = '#/child-home';
+    });
   }
 
-  function initCalendar(){
+  function initFootprintCheckin(){
     const kid = getCurrentChild();
     const title = document.getElementById('cal-title');
     const grid = document.getElementById('cal-grid');
@@ -576,11 +619,32 @@
     const next = document.getElementById('cal-next');
     let cur = new Date(); cur.setDate(1);
 
+    function renderStats(d){
+      try{
+        const y = d.getFullYear(); const m = d.getMonth();
+        const last = new Date(y, m+1, 0);
+        const set = getCheckedMap(kid?.id);
+        let monthDays = 0;
+        for(let day=1; day<=last.getDate(); day++){
+          const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          if(set.has(ds)) monthDays++;
+        }
+        const streak = kid? getStreak(kid.id) : 0;
+        const week = kid? getWeeklyProgress(kid.id) : {daysDone:0};
+        const elMonth = document.getElementById('stat-month-days');
+        const elStreak = document.getElementById('stat-streak');
+        const elWeek = document.getElementById('stat-week');
+        if(elMonth) elMonth.textContent = String(monthDays);
+        if(elStreak) elStreak.textContent = String(streak);
+        if(elWeek) elWeek.textContent = `${week.daysDone||0}/7`;
+      }catch(e){ console.warn('stat render failed', e); }
+    }
+
     function renderMonth(d){
-      title.textContent = `${d.getFullYear()} 年 ${d.getMonth()+1} 月`;
+      if(title) title.textContent = `${d.getFullYear()} 年 ${d.getMonth()+1} 月`;
       const days = buildMonthDays(d.getFullYear(), d.getMonth());
       const checked = getCheckedMap(kid?.id);
-      grid.innerHTML = days.map(day=>{
+      if(grid) grid.innerHTML = days.map(day=>{
         const ds = dateStr(day.date);
         const classes = ['cal-day'];
         if(day.isOut) classes.push('is-out');
@@ -588,6 +652,7 @@
         if(checked.has(ds)) classes.push('is-checked');
         return `<div class="${classes.join(' ')}" data-date="${ds}" aria-label="${ds}${checked.has(ds)?' 已打卡':''}"><span>${day.n}</span><i class="dot" aria-hidden="true"></i></div>`;
       }).join('');
+      renderStats(d);
     }
 
     prev?.addEventListener('click', ()=>{ cur.setMonth(cur.getMonth()-1); renderMonth(cur); });
@@ -597,6 +662,57 @@
     });
 
     renderMonth(cur);
+  }
+
+  function initFootprintAchievement(){
+    const kid = getCurrentChild();
+    // 头卡占位数据：根据打卡天数简单推导“已解锁”和等级
+    (function renderHero(){
+      const dates = getCheckedMap(kid?.id);
+      const total = 12; // 占位总徽章
+      const earned = Math.min(total, Math.floor(dates.size/5));
+      const level = `Lv.${1 + Math.floor(earned/4)}`;
+      const p = Math.round((earned/total)*100);
+      const elEarn = document.getElementById('achieve-earned');
+      const elTotal = document.getElementById('achieve-total');
+      const elProg = document.getElementById('achieve-progress');
+      const elLvl = document.getElementById('achieve-level');
+      if(elEarn) elEarn.textContent = String(earned);
+      if(elTotal) elTotal.textContent = String(total);
+      if(elProg) elProg.style.width = `${p}%`;
+      if(elLvl) elLvl.textContent = level;
+    })();
+
+    const host = document.getElementById('badge-grid'); if(!host) return;
+    // 使用占位规则：固定显示 12 枚徽章，根据 earned 标记状态
+    const dates = getCheckedMap(kid?.id);
+    const total = 12; const earned = Math.min(total, Math.floor(dates.size/5));
+    host.innerHTML = Array.from({length: total}, (_,i)=>{
+      const n = i+1; const ok = n<=earned; const cls = ok? 'earned' : 'locked';
+      return `<div class="badge-item ${cls}"><div class="badge-circle">${ok?'✓':n}</div><div class="badge-label">徽章 #${n}</div></div>`;
+    }).join('');
+  }
+
+  function initFootprintReward(){
+    const kid = getCurrentChild();
+    // 头卡占位：积分与今日获得（根据结果数量/连击简单估算）
+    (function renderHero(){
+      const results = (State.data.results||[]).filter(r=> r.childId===kid?.id);
+      const streak = kid? getStreak(kid.id) : 0;
+      const points = results.length*10 + streak*5; // 占位规则
+      const today = todayStr();
+      const todayGain = results.filter(r=> (new Date(r.timestamp)).toDateString() === (new Date()).toDateString()).length*10;
+      const pEl = document.getElementById('reward-points');
+      const tEl = document.getElementById('reward-today');
+      if(pEl) pEl.textContent = String(points);
+      if(tEl) tEl.textContent = `+${todayGain}`;
+    })();
+
+    const host = document.getElementById('reward-timeline'); if(!host) return;
+    const list = (State.data.rewards||[]);
+    host.innerHTML = list.length
+      ? list.slice(0,10).map((r,i)=>{ const t=new Date(Date.now()-i*86400000); const ts=`${t.getMonth()+1}/${t.getDate()}`; return `<li><span>奖励 #${i+1}</span><span class="time">${ts}</span></li>`; }).join('')
+      : '<li class="text-subtle">暂无奖励</li>';
   }
 
   function initSettings(){
@@ -633,6 +749,7 @@
         const target = roleParent.checked ? 'parent' : 'student';
         if(target === State.session.role) { showToast('角色未变化'); return; }
         if(target==='parent' && State.data.parentLock?.enabled){
+          const pin = window.prompt('输入家长PIN以切换到家长模式');
           if(!pin || pin !== State.data.parentLock.pin){ showToast('PIN 不正确'); return; }
           State.session.unlockUntil = Date.now()+5*60*1000; // 同步解锁
         }
@@ -664,6 +781,31 @@
 
   function initMy(){
     const role = State.session.role || 'student';
+    // 头像、昵称、角色文案
+    const nickEl = document.getElementById('my-nickname');
+    const roleEl = document.getElementById('my-role');
+    const avatarImg = document.getElementById('my-avatar');
+    const kid = getCurrentChild();
+    const nickname = role==='parent' ? (State.data.parentProfile?.nickname||State.data.parentProfile?.name||'家长')
+                                     : (kid?.nickname || kid?.name || State.data.account?.identifier || '未登录');
+    const avatarUrl = role==='parent' ? (State.data.parentProfile?.avatarUrl||'assets/icons/user.svg')
+                                      : (kid?.avatarUrl || 'assets/icons/user.svg');
+    if(nickEl) nickEl.textContent = nickname;
+    if(roleEl) roleEl.textContent = role==='parent' ? '家长模式' : '学生模式';
+    if(avatarImg) avatarImg.src = avatarUrl;
+
+    // Hub 内的退出按钮
+    const btnLogoutHub = document.getElementById('btn-logout-hub');
+    btnLogoutHub?.addEventListener('click', ()=>{
+      State.data.account = { id:'', role:'guest', identifier:'', password:'' };
+      State.session.role = null; save();
+      showToast('已退出登录');
+      setTimeout(()=> location.hash = '#/onboarding', 300);
+    });
+  }
+
+  function initMyAccount(){
+    const role = State.session.role || 'student';
     const form = document.getElementById('my-form');
     const apiBase = document.getElementById('api-base');
     const apiToken = document.getElementById('api-token');
@@ -673,50 +815,55 @@
     const btnChangePwd = document.getElementById('btn-change-pwd');
     const accIdEl = document.getElementById('acc-identifier');
     const accRoleEl = document.getElementById('acc-role');
+    const forStu = document.getElementById('for-student');
+    const forPar = document.getElementById('for-parent');
     const acc = State.data.account || { identifier:'', role:'guest' };
     if(accIdEl) accIdEl.textContent = acc.identifier || '未登录';
-    if(accRoleEl) accRoleEl.textContent = acc.role || '-';
+    if(accRoleEl) accRoleEl.textContent = role;
     // 显示服务配置
     if(apiBase) apiBase.value = State.data.api?.baseUrl || '';
     if(apiToken) apiToken.value = State.data.api?.token || '';
+    if(forStu) forStu.style.display = role==='student' ? '' : 'none';
+    if(forPar) forPar.style.display = role==='parent' ? '' : 'none';
 
     if(role==='student'){
       const kid = getCurrentChild();
-      if(!kid){
-        const box = document.getElementById('my-box');
-        if(box) box.innerHTML = `<div class="card"><div class="empty">暂无孩子信息</div><a class="btn btn-primary" href="#/onboarding">去创建</a></div>`;
-        return;
+      if(kid){
+        const nm = document.getElementById('field-name'); if(nm) nm.value = kid.name || '';
+        const gr = document.getElementById('field-grade'); if(gr) gr.value = kid.grade || '';
+        const gl = document.getElementById('field-goal'); if(gl) gl.value = kid.goals?.dailyCount || 30;
       }
-      document.getElementById('field-name').value = kid.name || '';
-      document.getElementById('field-grade').value = kid.grade || '';
-      document.getElementById('field-goal').value = kid.goals?.dailyCount || 30;
     } else {
       const p = State.data.parentProfile || { name:'', phone:'', email:'' };
-      document.getElementById('field-p-name').value = p.name || '';
-      document.getElementById('field-p-phone').value = p.phone || '';
-      document.getElementById('field-p-email').value = p.email || '';
+      const pn = document.getElementById('field-p-name'); if(pn) pn.value = p.name || '';
+      const ph = document.getElementById('field-p-phone'); if(ph) ph.value = p.phone || '';
+      const pe = document.getElementById('field-p-email'); if(pe) pe.value = p.email || '';
     }
 
     form?.addEventListener('submit', (e)=>{
       e.preventDefault();
-      // 保存服务配置
       if(apiBase) State.data.api.baseUrl = (apiBase.value||'').trim();
       if(apiToken) State.data.api.token = (apiToken.value||'').trim();
       if(role==='student'){
         const kid = getCurrentChild(); if(!kid) return;
-        kid.name = document.getElementById('field-name').value.trim();
-        kid.grade = document.getElementById('field-grade').value.trim();
-        const g = Number(document.getElementById('field-goal').value||30);
-        kid.goals = Object.assign({}, kid.goals||{}, { dailyCount: g });
+        const nm = document.getElementById('field-name'); if(nm) kid.name = nm.value.trim();
+        const gr = document.getElementById('field-grade'); if(gr) kid.grade = gr.value.trim();
+        const gl = document.getElementById('field-goal'); if(gl){
+          const g = Number(gl.value||30); kid.goals = Object.assign({}, kid.goals||{}, { dailyCount: g });
+        }
       } else {
+        const pn = document.getElementById('field-p-name');
+        const ph = document.getElementById('field-p-phone');
+        const pe = document.getElementById('field-p-email');
         State.data.parentProfile = {
-          name: document.getElementById('field-p-name').value.trim(),
-          phone: document.getElementById('field-p-phone').value.trim(),
-          email: document.getElementById('field-p-email').value.trim(),
+          name: pn? pn.value.trim() : '',
+          phone: ph? ph.value.trim() : '',
+          email: pe? pe.value.trim() : '',
+          avatarUrl: State.data.parentProfile?.avatarUrl || '',
+          nickname: State.data.parentProfile?.nickname || '',
         };
       }
-      save();
-      showToast('已保存');
+      save(); showToast('已保存');
     });
 
     btnPull?.addEventListener('click', async ()=>{
@@ -727,9 +874,7 @@
         } else if(role==='parent' && payload?.parent){
           State.data.parentProfile = Object.assign({}, State.data.parentProfile||{}, payload.parent);
         }
-        save();
-        initMy();
-        showToast('已从服务端拉取（或模拟）');
+        save(); initMyAccount(); showToast('已从服务端拉取（或模拟）');
       }catch(err){ showToast('拉取失败'); console.error(err); }
     });
 
@@ -754,6 +899,42 @@
       State.session.role = null; save();
       showToast('已退出登录');
       setTimeout(()=> location.hash = '#/onboarding', 300);
+    });
+  }
+
+  function initMyProfile(){
+    const role = State.session.role || 'student';
+    const kid = getCurrentChild();
+    const avatarInput = document.getElementById('profile-avatar');
+    const avatarImg = document.getElementById('profile-avatar-img');
+    const nickInput = document.getElementById('profile-nickname');
+    const form = document.getElementById('profile-form');
+
+    const curAvatar = role==='parent' ? (State.data.parentProfile?.avatarUrl||'assets/icons/user.svg')
+                                      : (kid?.avatarUrl||'assets/icons/user.svg');
+    const curNick = role==='parent' ? (State.data.parentProfile?.nickname||State.data.parentProfile?.name||'家长')
+                                    : (kid?.nickname||kid?.name||'');
+    if(avatarImg) avatarImg.src = curAvatar;
+    if(nickInput) nickInput.value = curNick;
+
+    avatarInput?.addEventListener('change', ()=>{
+      const f = avatarInput.files && avatarInput.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{ if(avatarImg) avatarImg.src = reader.result; };
+      reader.readAsDataURL(f);
+    });
+
+    form?.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const newNick = (nickInput?.value||'').trim();
+      const imgUrl = avatarImg?.src || '';
+      if(role==='parent'){
+        State.data.parentProfile = Object.assign({}, State.data.parentProfile||{}, { nickname: newNick, avatarUrl: imgUrl });
+      } else if(kid){
+        kid.nickname = newNick; kid.avatarUrl = imgUrl;
+      }
+      save(); showToast('已保存头像与昵称');
+      history.back();
     });
   }
 

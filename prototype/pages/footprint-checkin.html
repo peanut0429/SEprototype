@@ -1,0 +1,61 @@
+<section data-page="footprint-checkin" data-state="ready">
+  <div data-view="ready">
+    <!-- 顶部分段导航 -->
+    <div class="card">
+      <div class="segmented-nav" role="tablist" aria-label="足迹导航">
+        <a class="seg-item seg-checkin" id="tab-checkin" href="#/footprint-checkin" aria-current="page" role="tab" aria-selected="true">
+          <span class="seg-icon" aria-hidden="true">📅</span>
+          <span>打卡</span>
+        </a>
+        <a class="seg-item seg-achievement" id="tab-achievement" href="#/footprint-achievement" aria-current="false" role="tab" aria-selected="false">
+          <span class="seg-icon" aria-hidden="true">🏆</span>
+          <span>成就</span>
+        </a>
+        <a class="seg-item seg-reward" id="tab-reward" href="#/footprint-reward" aria-current="false" role="tab" aria-selected="false">
+          <span class="seg-icon" aria-hidden="true">🎁</span>
+          <span>奖励</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 顶部摘要：本月打卡 / 连击 / 本周完成 -->
+    <div class="stats" style="margin-bottom:12px">
+      <div class="stats-card">
+        <div class="stats-value" id="stat-month-days">0</div>
+        <div class="stats-sub">本月打卡天数</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-value" id="stat-streak">0</div>
+        <div class="stats-sub">连续打卡</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-value" id="stat-week">0/7</div>
+        <div class="stats-sub">本周完成</div>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <div class="calendar" id="calendar">
+        <div class="cal-header">
+          <button class="icon-btn" id="cal-prev" aria-label="上一月">◀</button>
+          <div class="cal-title" id="cal-title">-- 年 -- 月</div>
+          <button class="icon-btn" id="cal-next" aria-label="下一月">▶</button>
+        </div>
+        <div class="cal-week">
+          <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn btn-primary col" id="btn-checkin-page" type="button">今日打卡</button>
+        <a class="btn btn-plain col" href="#/child-home">返回首页</a>
+      </div>
+      <div class="text-subtle" style="margin-top:8px">说明：完成一次练习视为打卡；也可手动“今日打卡”。</div>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无数据</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>

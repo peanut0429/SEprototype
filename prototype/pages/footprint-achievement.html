@@ -1,0 +1,53 @@
+<section data-page="footprint-achievement" data-state="ready">
+  <div data-view="ready">
+    <!-- 顶部分段导航（置顶） -->
+    <div class="card">
+      <div class="segmented-nav" role="tablist" aria-label="足迹导航">
+        <a class="seg-item seg-checkin" id="tab-checkin" href="#/footprint-checkin" aria-current="false" role="tab" aria-selected="false">
+          <span class="seg-icon" aria-hidden="true">📅</span>
+          <span>打卡</span>
+        </a>
+        <a class="seg-item seg-achievement" id="tab-achievement" href="#/footprint-achievement" aria-current="page" role="tab" aria-selected="true">
+          <span class="seg-icon" aria-hidden="true">🏆</span>
+          <span>成就</span>
+        </a>
+        <a class="seg-item seg-reward" id="tab-reward" href="#/footprint-reward" aria-current="false" role="tab" aria-selected="false">
+          <span class="seg-icon" aria-hidden="true">🎁</span>
+          <span>奖励</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 成就头卡：等级 + 进度条（现代占位） -->
+    <div class="card hero-card achievement-hero" role="region" aria-label="成就概览">
+      <div class="hero-content">
+        <div class="hero-title">成就进度</div>
+        <div class="hero-sub">已解锁 <span id="achieve-earned">0</span> / <span id="achieve-total">0</span> 枚</div>
+        <div class="progress-2" aria-label="解锁进度">
+          <div class="progress-fill-2" id="achieve-progress" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="level-pill"><span id="achieve-level">Lv.1</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+
+      <div class="row tag-chips" role="tablist" aria-label="成就分类">
+        <button class="chip is-active" role="tab" aria-selected="true">全部</button>
+        <button class="chip" role="tab" aria-selected="false">里程碑</button>
+        <button class="chip" role="tab" aria-selected="false">连续</button>
+        <button class="chip" role="tab" aria-selected="false">效率</button>
+      </div>
+
+      <div class="section-title" style="margin-top:8px">徽章墙</div>
+      <div id="badge-grid" class="badge-grid"></div>
+      <div class="text-subtle">提示：达到特定条件可解锁徽章。本页数据为占位，用于演示布局。</div>
+    </div>
+  </div>
+  <div data-view="loading"><div class="skeleton skeleton-page"></div></div>
+  <div data-view="empty"><div class="card"><div class="empty"><img src="assets/icons/empty.svg" alt="空" class="empty-icon"/><div>暂无数据</div></div></div></div>
+  <div data-view="error"><div class="card"><div class="empty"><img src="assets/icons/error.svg" alt="错" class="empty-icon"/><div>加载失败</div></div></div></div>
+  <div data-view="offline"><div class="card"><div class="notice">离线状态，功能受限</div></div></div>
+</section>
